@@ -7,12 +7,12 @@ public class DepthFirstSearchRecursive {
     /* Class Graph */
 
     private static class Graph {
-        private List<Set<Integer>> adjacencyList;
+        private List<List<Integer>> adjacencyList;
 
         public Graph(int size) {
             adjacencyList = new ArrayList<>();
             for (int i = 0; i < size; ++i) {
-                adjacencyList.add(new HashSet<>());
+                adjacencyList.add(new ArrayList<>());
             }
         }
 
@@ -20,7 +20,7 @@ public class DepthFirstSearchRecursive {
             adjacencyList.get(left).add(right);
         }
 
-        public Set<Integer> neighbours(int index) {
+        public List<Integer> neighbours(int index) {
             return adjacencyList.get(index);
         }
 
