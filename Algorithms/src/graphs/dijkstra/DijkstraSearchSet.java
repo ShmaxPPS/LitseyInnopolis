@@ -1,8 +1,8 @@
-package graphs;
+package graphs.dijkstra;
 
 import java.util.*;
 
-public class DijkstraSearchQueue {
+public class DijkstraSearchSet {
 
     // Class Graph
     private static class Edge {
@@ -75,7 +75,7 @@ public class DijkstraSearchQueue {
     private long[] distances;
     private int[] parents;
 
-    public DijkstraSearchQueue(Graph graph) {
+    public DijkstraSearchSet(Graph graph) {
         this.graph = graph;
         distances = new long[graph.size()];
         parents = new int[graph.size()];
@@ -87,20 +87,20 @@ public class DijkstraSearchQueue {
 
     public void execute(int start) {
         distances[start] = 0L;
-        PriorityQueue<Integer> queue = new PriorityQueue<>(new NodeComparator(distances));
-        queue.add(start);
-        while (!queue.isEmpty()) {
-            int minNode = queue.poll();
+        TreeSet<Integer> set = new TreeSet<>(new NodeComparator(distances));
+        set.add(start);
+        while (!set.isEmpty()) {
+            int minNode = set.pollFirst();
             if (distances[minNode] == Integer.MAX_VALUE) {
                 break;
             }
             for (Edge edge : graph.neighbours(minNode)) {
                 long distance = distances[minNode] + edge.getWeight();
                 if (distance < distances[edge.getTo()]) {
-                    queue.remove(edge.getTo());
+                    set.remove(edge.getTo());
                     distances[edge.getTo()] = distance;
                     parents[edge.getTo()] = minNode;
-                    queue.add(edge.getTo());
+                    set.add(edge.getTo());
                 }
             }
         }

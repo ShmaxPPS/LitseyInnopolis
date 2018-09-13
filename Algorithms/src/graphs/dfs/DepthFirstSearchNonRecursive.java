@@ -1,8 +1,8 @@
-package graphs;
+package graphs.dfs;
 
 import java.util.*;
 
-public class DepthFirstSearchRecursive {
+public class DepthFirstSearchNonRecursive {
 
     /* Class Graph */
 
@@ -35,6 +35,7 @@ public class DepthFirstSearchRecursive {
     private List<Integer> inTime;
     private List<Integer> outTime;
     private List<Integer> parent;
+    private List<Iterator<Integer>> neighboursIterator;
     private Graph graph;
     private int time;
 
@@ -42,18 +43,20 @@ public class DepthFirstSearchRecursive {
         WHITE, GREY, BLACK
     }
 
-    public DepthFirstSearchRecursive(Graph graph) {
+    public DepthFirstSearchNonRecursive(Graph graph) {
         this.graph = graph;
         time = 0;
         isUsed = new ArrayList<>();
         inTime = new ArrayList<>();
         outTime = new ArrayList<>();
         parent = new ArrayList<>();
+        neighboursIterator = new ArrayList<>();
         for (int i = 0; i < graph.size(); ++i) {
             isUsed.add(Color.WHITE);
             inTime.add(Integer.MAX_VALUE);
             outTime.add(Integer.MAX_VALUE);
             parent.add(Integer.MAX_VALUE);
+            neighboursIterator.add(graph.neighbours(i).iterator());
         }
     }
 
@@ -66,16 +69,27 @@ public class DepthFirstSearchRecursive {
     }
 
     public void execute(int start) {
+        LinkedList<Integer> stack = new LinkedList<>();
+        stack.addLast(start);
         inTime.set(start, time++);
         isUsed.set(start, Color.GREY);
-        for (int child : graph.neighbours(start)) {
-            if (isUsed.get(child) == Color.WHITE) {
-                parent.set(child, start);
-                execute(child);
+        while (!stack.isEmpty()) {
+            int node = stack.peekLast();
+            Iterator<Integer> iterator = neighboursIterator.get(node);
+            if (iterator.hasNext()) {
+                int child = iterator.next();
+                if (isUsed.get(child) == Color.WHITE) {
+                    inTime.set(child, time++);
+                    isUsed.set(child, Color.GREY);
+                    parent.set(child, node);
+                    stack.addLast(child);
+                }
+            } else {
+                outTime.set(node, time++);
+                isUsed.set(node, Color.BLACK);
+                stack.pollLast();
             }
         }
-        outTime.set(start, time++);
-        isUsed.set(start, Color.BLACK);
     }
 
     public int getInTime(int node) {
