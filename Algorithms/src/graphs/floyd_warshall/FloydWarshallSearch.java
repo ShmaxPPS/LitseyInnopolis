@@ -1,4 +1,4 @@
-package graphs.floyd;
+package graphs.floyd_warshall;
 
 public class FloydWarshallSearch {
 
@@ -44,11 +44,11 @@ public class FloydWarshallSearch {
     public FloydWarshallSearch(Graph graph) {
         this.graph = graph;
         distances = new long[graph.size()][graph.size()];
-        // parents = new int[graph.size()][graph.size()];
+        parents = new int[graph.size()][graph.size()];
         for (int i = 0; i < graph.size(); ++i) {
             for (int j = 0; j < graph.size(); ++j) {
                 distances[i][j] = graph.getWeight(i, j);
-                // parents[i][j] = Integer.MIN_VALUE;
+                parents[i][j] = Integer.MIN_VALUE;
             }
         }
     }
@@ -63,7 +63,7 @@ public class FloydWarshallSearch {
                     if (distances[i][j] > distances[i][k] + distances[k][j]) {
                         distances[i][j] = distances[i][k] + distances[k][j];
                         // parents[i][j] = k; // first method
-                        // parent[i][j] = parent[k][j] // second method
+                        // parents[i][j] = parents[k][j]; // second method
                     }
                 }
             }
@@ -81,5 +81,9 @@ public class FloydWarshallSearch {
 
     public long getDistance(int left, int right) {
         return distances[left][right];
+    }
+
+    public int getParent(int left, int right) {
+        return parents[left][right];
     }
 }
