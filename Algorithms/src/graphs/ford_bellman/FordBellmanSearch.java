@@ -1,6 +1,7 @@
 package graphs.ford_bellman;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FordBellmanSearch {
@@ -59,20 +60,19 @@ public class FordBellmanSearch {
     private int[] parents;
 
     public FordBellmanSearch(Graph graph) {
+        distances = new long[graph.size()];
+        parents = new int[graph.size()];
         for (int i = 0; i < graph.size(); ++i) {
             this.graph = graph;
-            distances[i] = Long.MAX_VALUE;
+            distances[i] = Long.MAX_VALUE / 2; // not Long.MAX_VALUE, for searching unreachable negative cycle
             parents[i] = Integer.MIN_VALUE;
         }
     }
 
-    public void execute(int start) {
+    public List<Integer> execute(int start) {
         distances[start] = 0;
         for (int i = 0; i < graph.size() - 1; ++i) {
             for (Edge edge : graph.getEdges()) {
-                if (distances[edge.getFrom()] == Long.MAX_VALUE) {
-                    continue;
-                }
                 if (distances[edge.getTo()] > distances[edge.getFrom()] + edge.getWeight()) {
                     distances[edge.getTo()] = distances[edge.getFrom()] + edge.getWeight();
                     parents[edge.getTo()] = edge.getFrom();
@@ -81,10 +81,28 @@ public class FordBellmanSearch {
         }
         for (Edge edge : graph.getEdges()) {
             if (distances[edge.getTo()] > distances[edge.getFrom()] + edge.getWeight()) {
+                parents[edge.getTo()] = edge.getFrom(); // for one node graph
                 // have negative cycle
-                return;
+                int node = edge.getTo();
+                for (int i = 0; i < graph.size - 1; ++i) {
+                    node = parents[node];
+                }
+                List<Integer> cycle = new ArrayList<>();
+                cycle.add(node);
+                int cur = parents[node];
+                while (cur != node) {
+                    cycle.add(cur);
+                    cur = parents[cur];
+                }
+                Collections.reverse(cycle);
+                return cycle;
             }
         }
         // doesn't have negative cycle
+        return null;
+    }
+
+    public long getDistance(int node) {
+        return distances[node];
     }
 }
