@@ -18,7 +18,7 @@ public class DisjointSetUnion {
     private int root(int x) {
         if (parents[x] != x) {
             // path reduction heuristic
-            parents[x] = root(x);
+            parents[x] = root(parents[x]);
         }
         return parents[x];
     }
