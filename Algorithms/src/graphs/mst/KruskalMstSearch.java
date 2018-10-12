@@ -1,28 +1,32 @@
+package graphs.mst;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+public class KruskalMstSearch {
 
-public class Kruskal {
     private class Edge implements Comparable<Edge> {
-        private int from, to, w;
+        private int from;
+        private int to;
+        private int weight;
 
-        public Edge(int v, int u, int we) {
-            from = v;
-            to = u;
-            w = we;
+        public Edge(int from, int to, int weight) {
+            this.from = from;
+            this.to = to;
+            this.weight = weight;
         }
 
         @Override
         public int compareTo(Edge o) {
-            return this.w - o.w;
+            return weight - o.weight;
         }
     }
 
-    private class DSU {
+    private class DisjointSetUnion {
         private int[] parents;
 
-        public DSU(int n) {
+        public DisjointSetUnion(int n) {
             this.parents = new int[n];
             for (int i = 0; i < n; ++i) {
                 this.parents[i] = i;
@@ -62,24 +66,26 @@ public class Kruskal {
 
     }
 
-    private DSU dsu;
+    private DisjointSetUnion dsu;
     private Edge[] edges;
     private int cost = 0;
 
-    public Kruskal(int size, Edge[] eds) {
+    public KruskalMstSearch(int size, Edge[] eds) {
         edges = eds.clone();
-        dsu = new DSU(size);
+        dsu = new DisjointSetUnion(size);
         Arrays.sort(edges);
     }
 
-    public List<Edge> KruskalAlgorithm() {
+    public List<Edge> execute() {
         List<Edge> ans = new ArrayList<>();
         for (Edge edge : edges) {
-            int v = edge.from, u = edge.to, w = edge.w;
-            if (!dsu.equivalent(v, u)) {
+            int from = edge.from;
+            int to = edge.to;
+            int weight = edge.weight;
+            if (!dsu.equivalent(from, to)) {
                 ++cost;
                 ans.add(edge);
-                dsu.unite(v, u);
+                dsu.unite(from, to);
             }
         }
         return ans;
