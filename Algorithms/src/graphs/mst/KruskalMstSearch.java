@@ -1,12 +1,12 @@
 package graphs.mst;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class KruskalMstSearch {
 
-    private class Edge implements Comparable<Edge> {
+    private static class Edge implements Comparable<Edge> {
         private int from;
         private int to;
         private int weight;
@@ -20,6 +20,29 @@ public class KruskalMstSearch {
         @Override
         public int compareTo(Edge o) {
             return weight - o.weight;
+        }
+    }
+
+    private static class Graph {
+        private int size;
+        private List<Edge> edges;
+
+        public Graph(int size) {
+            this.size = size;
+            edges = new ArrayList<>();
+        }
+
+        public void addEdge(int left, int right, int weight) {
+            Edge edge = new Edge(left, right, weight);
+            edges.add(edge);
+        }
+
+        public List<Edge> getEdges() {
+            return edges;
+        }
+
+        public int size() {
+            return size;
         }
     }
 
@@ -67,25 +90,20 @@ public class KruskalMstSearch {
     }
 
     private DisjointSetUnion dsu;
-    private Edge[] edges;
-    private int cost = 0;
+    private List<Edge> edges;
 
-    public KruskalMstSearch(int size, Edge[] eds) {
-        edges = eds.clone();
-        dsu = new DisjointSetUnion(size);
-        Arrays.sort(edges);
+    public KruskalMstSearch(Graph graph) {
+        dsu = new DisjointSetUnion(graph.size());
+        edges = new ArrayList<>(graph.getEdges());
+        Collections.sort(edges);
     }
 
     public List<Edge> execute() {
         List<Edge> ans = new ArrayList<>();
         for (Edge edge : edges) {
-            int from = edge.from;
-            int to = edge.to;
-            int weight = edge.weight;
-            if (!dsu.equivalent(from, to)) {
-                ++cost;
+            if (!dsu.equivalent(edge.from, edge.to)) {
                 ans.add(edge);
-                dsu.unite(from, to);
+                dsu.unite(edge.from, edge.to);
             }
         }
         return ans;
