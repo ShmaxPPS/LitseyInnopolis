@@ -2,7 +2,6 @@ package graphs.mst;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class PrimMstSearchNaive {
 
@@ -114,25 +113,5 @@ public class PrimMstSearchNaive {
             }
         }
         return ans;
-    }
-
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int n = scanner.nextInt();
-        int m = scanner.nextInt();
-        Graph graph = new Graph(n);
-        for (int i = 0; i < m; ++i) {
-            int from = scanner.nextInt() - 1;
-            int to = scanner.nextInt() - 1;
-            int weight = scanner.nextInt();
-            graph.addEdge(from, to, weight);
-            graph.addEdge(to, from, weight);
-        }
-        PrimMstSearchNaive primNaiveMstSearch = new PrimMstSearchNaive(graph);
-        long mstWeight = 0L;
-        for (Edge edge : primNaiveMstSearch.execute()) {
-            mstWeight += edge.getWeight();
-        }
-        System.out.println(mstWeight);
     }
 }
