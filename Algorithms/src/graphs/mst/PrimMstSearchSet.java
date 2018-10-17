@@ -1,17 +1,23 @@
-package graphs.dijkstra;
+package graphs.mst;
 
 import java.util.*;
 
-public class DijkstraSearchSet {
+public class PrimMstSearchSet {
 
     // Class Graph
     private static class Edge {
+        private int from;
         private int to;
         private int weight;
 
-        public Edge(int to, int weight) {
+        public Edge(int from, int to, int weight) {
+            this.from = from;
             this.to = to;
             this.weight = weight;
+        }
+
+        public int getFrom() {
+            return from;
         }
 
         public int getTo() {
@@ -25,15 +31,15 @@ public class DijkstraSearchSet {
 
     private static class NodeComparator implements Comparator<Integer> {
 
-        private long[] distances;
+        private int[] weights;
 
-        public NodeComparator(long[] distances) {
-            this.distances = distances;
+        public NodeComparator(int[] weights) {
+            this.weights = weights;
         }
 
         @Override
         public int compare(Integer left, Integer right) {
-            long difference = distances[left] - distances[right];
+            int difference = weights[left] - weights[right];
             if (difference > 0){
                 return 1;
             } else if (difference < 0) {
@@ -56,7 +62,7 @@ public class DijkstraSearchSet {
         }
 
         public void addEdge(int left, int right, int weight) {
-            Edge edge = new Edge(right, weight);
+            Edge edge = new Edge(left, right, weight);
             adjacencyList.get(left).add(edge);
         }
 
@@ -69,40 +75,42 @@ public class DijkstraSearchSet {
         }
     }
 
-    // Dijkstra Search algorithm
-
     private Graph graph;
-    private long[] distances;
+    private int[] weights;
     private int[] parents;
 
-    public DijkstraSearchSet(Graph graph) {
+    public PrimMstSearchSet(Graph graph) {
         this.graph = graph;
-        distances = new long[graph.size()];
+        weights = new int[graph.size()];
         parents = new int[graph.size()];
         for (int i = 0; i < graph.size(); ++i) {
-            distances[i] = Long.MAX_VALUE;
-            parents[i] = Integer.MAX_VALUE;
+            weights[i] = Integer.MAX_VALUE;
+            parents[i] = Integer.MIN_VALUE;
         }
     }
 
-    public void execute(int start) {
-        distances[start] = 0L;
-        TreeSet<Integer> set = new TreeSet<>(new NodeComparator(distances));
-        set.add(start);
+    public List<Edge> execute() {
+        List<Edge> ans = new ArrayList<>();
+        weights[0] = 0;
+        TreeSet<Integer> set = new TreeSet<>(new NodeComparator(weights));
+        set.add(0);
         while (!set.isEmpty()) {
             int minNode = set.pollFirst();
-            if (distances[minNode] == Long.MAX_VALUE) {
+            if (weights[minNode] == Integer.MAX_VALUE) {
                 break;
             }
+            if (parents[minNode] != Integer.MIN_VALUE) {
+                ans.add(new Edge(parents[minNode], minNode, weights[minNode]));
+            }
             for (Edge edge : graph.neighbours(minNode)) {
-                long distance = distances[minNode] + edge.getWeight();
-                if (distance < distances[edge.getTo()]) {
-                    set.remove(edge.getTo());
-                    distances[edge.getTo()] = distance;
+                int weight = edge.getWeight();
+                if (weight < weights[edge.getTo()] && (set.remove(edge.getTo()) || weights[edge.getTo()] == Integer.MAX_VALUE)) {
+                    weights[edge.getTo()] = weight;
                     parents[edge.getTo()] = minNode;
                     set.add(edge.getTo());
                 }
             }
         }
+        return ans;
     }
 }

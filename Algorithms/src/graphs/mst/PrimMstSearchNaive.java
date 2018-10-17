@@ -2,8 +2,9 @@ package graphs.mst;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
-public class PrimNaiveMstSearch {
+public class PrimMstSearchNaive {
 
     // Class Graph
     private static class Graph {
@@ -27,7 +28,6 @@ public class PrimNaiveMstSearch {
             // for multi-edges
             if (weight < adjacencyMatrix[left][right]) {
                 adjacencyMatrix[left][right] = weight;
-                adjacencyMatrix[right][left] = weight;
             }
         }
 
@@ -69,12 +69,12 @@ public class PrimNaiveMstSearch {
         }
     }
 
+    private Graph graph;
     private boolean[] used;
     private int[] weights;
     private int[] parents;
-    private Graph graph;
 
-    public PrimNaiveMstSearch(Graph graph) {
+    public PrimMstSearchNaive(Graph graph) {
         this.graph = graph;
         used = new boolean[graph.size()];
         weights = new int[graph.size()];
@@ -107,12 +107,32 @@ public class PrimNaiveMstSearch {
 
             for (int to = 0; to < graph.size(); ++to) {
                 int weight = graph.getWeight(minNode, to);
-                if (!used[to] && weight != Integer.MAX_VALUE && weight < weights[to]) {
+                if (weight < weights[to]) {
                     weights[to] = weight;
                     parents[to] = minNode;
                 }
             }
         }
         return ans;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int m = scanner.nextInt();
+        Graph graph = new Graph(n);
+        for (int i = 0; i < m; ++i) {
+            int from = scanner.nextInt() - 1;
+            int to = scanner.nextInt() - 1;
+            int weight = scanner.nextInt();
+            graph.addEdge(from, to, weight);
+            graph.addEdge(to, from, weight);
+        }
+        PrimMstSearchNaive primNaiveMstSearch = new PrimMstSearchNaive(graph);
+        long mstWeight = 0L;
+        for (Edge edge : primNaiveMstSearch.execute()) {
+            mstWeight += edge.getWeight();
+        }
+        System.out.println(mstWeight);
     }
 }

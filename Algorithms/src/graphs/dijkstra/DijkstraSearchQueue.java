@@ -91,7 +91,7 @@ public class DijkstraSearchQueue {
         queue.add(start);
         while (!queue.isEmpty()) {
             int minNode = queue.poll();
-            if (distances[minNode] == Integer.MAX_VALUE) {
+            if (distances[minNode] == Long.MAX_VALUE) {
                 break;
             }
             for (Edge edge : graph.neighbours(minNode)) {
