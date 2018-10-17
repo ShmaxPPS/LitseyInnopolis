@@ -97,15 +97,16 @@ public class KruskalMstSearch {
     }
 
     private DisjointSetUnion dsu;
-    private List<Edge> edges;
+    private Graph graph;
 
     public KruskalMstSearch(Graph graph) {
+        this.graph = graph;
         dsu = new DisjointSetUnion(graph.size());
-        edges = new ArrayList<>(graph.getEdges());
-        Collections.sort(edges);
     }
 
     public List<Edge> execute() {
+        List<Edge> edges = new ArrayList<>(graph.getEdges());
+        Collections.sort(edges);
         List<Edge> ans = new ArrayList<>();
         for (Edge edge : edges) {
             if (!dsu.equivalent(edge.from, edge.to)) {
