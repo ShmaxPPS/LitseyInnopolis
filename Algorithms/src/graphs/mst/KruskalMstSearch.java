@@ -48,23 +48,25 @@ public class KruskalMstSearch {
 
     private class DisjointSetUnion {
         private int[] parents;
+        private int[] ranks;
 
-        public DisjointSetUnion(int n) {
-            this.parents = new int[n];
-            for (int i = 0; i < n; ++i) {
-                this.parents[i] = i;
+        public DisjointSetUnion(int size) {
+            parents = new int[size];
+            ranks = new int[size];
+            for (int i = 0; i < size; ++i) {
+                parents[i] = i;
             }
         }
 
         private int root(int xy) {
             int root = xy;
-            while (this.parents[root] != root) {
-                root = this.parents[root];
+            while (parents[root] != root) {
+                root = parents[root];
             }
             int i = xy;
-            while (this.parents[i] != i) {
-                int j = this.parents[i];
-                this.parents[i] = root;
+            while (parents[i] != i) {
+                int j = parents[i];
+                parents[i] = root;
                 i = j;
             }
             return root;
@@ -74,12 +76,17 @@ public class KruskalMstSearch {
             x = root(x);
             y = root(y);
             if (x == y) {
+                // in one set yet
                 return;
             }
-            if (x < y) {
-                this.parents[x] = y;
+            // rank heuristic
+            if (ranks[x] == ranks[y]) {
+                ranks[y]++;
+            }
+            if (ranks[x] < ranks[y]) {
+                parents[x] = y;
             } else {
-                this.parents[y] = x;
+                parents[y] = x;
             }
         }
 

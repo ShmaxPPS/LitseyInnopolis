@@ -3,11 +3,11 @@ package graphs.mst;
 public class DisjointSetUnion {
 
     private int[] parents;
-    private int[] rank;
+    private int[] ranks;
 
     public DisjointSetUnion(int size) {
         parents = new int[size];
-        rank = new int[size];
+        ranks = new int[size];
         for (int i = 0; i < size; ++i) {
             parents[i] = i;
         }
@@ -49,10 +49,10 @@ public class DisjointSetUnion {
             return;
         }
         // rank heuristic
-        if (rank[x] == rank[y]) {
-            rank[y]++;
+        if (ranks[x] == ranks[y]) {
+            ranks[y]++;
         }
-        if (rank[x] < rank[y]) {
+        if (ranks[x] < ranks[y]) {
             parents[x] = y;
         } else {
             parents[y] = x;
