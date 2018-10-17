@@ -100,7 +100,8 @@ public class PrimMstSearchSet {
         while (!set.isEmpty()) {
             int minNode = set.pollFirst();
             if (weights[minNode] == Integer.MAX_VALUE) {
-                break;
+                // mst doesn't exist
+                return null;
             }
             if (parents[minNode] != Integer.MIN_VALUE) {
                 ans.add(new Edge(parents[minNode], minNode, weights[minNode]));
