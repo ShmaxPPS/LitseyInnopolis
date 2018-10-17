@@ -106,7 +106,7 @@ public class PrimMstSearchNaive {
 
             for (int to = 0; to < graph.size(); ++to) {
                 int weight = graph.getWeight(minNode, to);
-                if (weight < weights[to]) {
+                if (!used[to] && weight < weights[to]) {
                     weights[to] = weight;
                     parents[to] = minNode;
                 }

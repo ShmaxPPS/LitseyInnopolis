@@ -79,11 +79,13 @@ public class PrimMstSearchSet {
     }
 
     private Graph graph;
+    private boolean[] used;
     private int[] weights;
     private int[] parents;
 
     public PrimMstSearchSet(Graph graph) {
         this.graph = graph;
+        used = new boolean[graph.size()];
         weights = new int[graph.size()];
         parents = new int[graph.size()];
         for (int i = 0; i < graph.size(); ++i) {
@@ -103,12 +105,14 @@ public class PrimMstSearchSet {
                 // mst doesn't exist
                 return null;
             }
+            used[minNode] = true;
             if (parents[minNode] != Integer.MIN_VALUE) {
                 ans.add(new Edge(parents[minNode], minNode, weights[minNode]));
             }
             for (Edge edge : graph.neighbours(minNode)) {
                 int weight = edge.getWeight();
-                if (weight < weights[edge.getTo()] && (set.remove(edge.getTo()) || weights[edge.getTo()] == Integer.MAX_VALUE)) {
+                if (!used[edge.getTo()] && weight < weights[edge.getTo()]) {
+                    set.remove(edge.getTo());
                     weights[edge.getTo()] = weight;
                     parents[edge.getTo()] = minNode;
                     set.add(edge.getTo());
