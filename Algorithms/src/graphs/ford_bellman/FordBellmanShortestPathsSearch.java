@@ -58,10 +58,10 @@ public class FordBellmanShortestPathsSearch {
     private int[] parents;
 
     public FordBellmanShortestPathsSearch(Graph graph) {
+        this.graph = graph;
         distances = new long[graph.size()];
         parents = new int[graph.size()];
         for (int i = 0; i < graph.size(); ++i) {
-            this.graph = graph;
             distances[i] = Long.MAX_VALUE;
             parents[i] = Integer.MIN_VALUE;
         }

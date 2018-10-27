@@ -60,10 +60,10 @@ public class FordBellmanNegativeCycleSearch {
     private int[] parents;
 
     public FordBellmanNegativeCycleSearch(Graph graph) {
+        this.graph = graph;
         distances = new long[graph.size()];
         parents = new int[graph.size()];
         for (int i = 0; i < graph.size(); ++i) {
-            this.graph = graph;
             distances[i] = Long.MAX_VALUE / 2; // not Long.MAX_VALUE, for searching unreachable negative cycle
             parents[i] = Integer.MIN_VALUE;
         }
