@@ -110,29 +110,4 @@ public class BridgeSearch {
         isUsed[edge.getTo()] = Color.BLACK;
         return bridges;
     }
-
-    public static void main(String[] args) {
-        Graph graph = new Graph(11);
-        graph.addEdge(0, 1);
-        graph.addEdge(1, 2);
-        graph.addEdge(2, 3);
-        graph.addEdge(3, 0);
-
-        graph.addEdge(4, 5);
-        graph.addEdge(5, 6);
-        graph.addEdge(6, 4);
-
-        graph.addEdge(8, 9);
-        graph.addEdge(9, 10);
-        graph.addEdge(10, 8);
-
-        graph.addEdge(2, 4);
-        graph.addEdge(4, 7);
-        graph.addEdge(7, 8);
-
-        BridgeSearch bridgeSearch = new BridgeSearch(graph);
-        for (Edge edge : bridgeSearch.execute()) {
-            System.out.println(edge.from + " " + edge.to);
-        }
-    }
 }
