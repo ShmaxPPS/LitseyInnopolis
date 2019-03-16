@@ -15,8 +15,25 @@ public class SegmentTreeMin {
         }
     }
 
-    // build segment tree from mass
-    public static int[] build(int[] mass) {
+    // build segment tree from mass O(n)
+    public static int[] buildFast(int[] mass) {
+        // next power of 2
+        int size = 1 << ((int) (Math.log(mass.length) / Math.log(2)) + 1);
+        int[] segmentTree = new int[2 * size];
+        for (int i = 0; i < 2 * size; ++i) {
+            segmentTree[i] = Integer.MAX_VALUE;
+        }
+        for (int i = 0; i < mass.length; ++i) {
+            segmentTree[i + size] = mass[i];
+        }
+        for (int i = size - 1; i >= 1; --i) {
+            segmentTree[i] = Math.min(segmentTree[i << 1], segmentTree[(i << 1) + 1]);
+        }
+        return segmentTree;
+    }
+
+    // build segment tree from mass O(n* log n)
+    public static int[] buildSlow(int[] mass) {
         // next power of 2
         int size = 1 << ((int) (Math.log(mass.length) / Math.log(2)) + 1);
         int[] segmentTree = new int[2 * size];
@@ -60,7 +77,8 @@ public class SegmentTreeMin {
         for (int i = 0; i < n; ++i) {
             mass[i] = Integer.parseInt(lines[i]);
         }
-        int[] segmentTree = build(mass);
+        int[] segmentTree = buildFast(mass);
+        // int[] segmentTree = buildSlow(mass);
         for (int i = 0; i < mass.length - k + 1; ++i) {
             writer.println(min(segmentTree, i, i + k - 1));
         }
