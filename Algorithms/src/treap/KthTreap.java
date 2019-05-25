@@ -80,13 +80,11 @@ public class KthTreap {
         Node[] splitted = split(root, key);
         Node middle = splitted[1] != null ? splitted[1] : new Node(key);
         root = merge(merge(splitted[0], middle), splitted[2]);
-        validate(root);
     }
 
     public void remove(long key) {
         Node[] splitted = split(root, key);
         root = merge(splitted[0], splitted[2]);
-        validate(root);
     }
 
     public long kthMin(long k) {
