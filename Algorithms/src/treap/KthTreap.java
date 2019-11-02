@@ -1,7 +1,5 @@
 package treap;
 
-import java.io.*;
-
 public class KthTreap {
     private static final long MOD = 10000000000L;
     private Node root;
